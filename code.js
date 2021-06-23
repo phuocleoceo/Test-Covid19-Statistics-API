@@ -12,6 +12,21 @@ async function loadHC() {
     return data;
 }
 
+async function loadTenDays() {
+    const response = await fetch('https://api.apify.com/v2/key-value-stores/Tksmptn5O41eHrT4d/records/LATEST');
+    const responseJSON = await response.json();
+    const { canhiem, catuvong } = responseJSON;
+    let tenDays = [];
+    for (let i = 0; i < canhiem.length; i++) {
+        tenDays.unshift({
+            ngay: canhiem[i].day,
+            socanhiem: canhiem[i].quantity,
+            socatuvong: catuvong[i].quantity
+        });
+    }
+    return tenDays;
+}
+
 //Make first letter or a word Uppercase
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -19,16 +34,16 @@ function capitalizeFirstLetter(string) {
 
 // aaa-bbb => Aaa Bbb
 function formatName(name) {
-    var a = name.split("-");
-    var result = "";
-    for (var i = 0; i < a.length; i++) {
+    let a = name.split("-");
+    let result = "";
+    for (let i = 0; i < a.length; i++) {
         result += capitalizeFirstLetter(a[i]) + " ";
     }
     return result;
 }
 // Get name by hc-key
 function getHcName(key, hcKey) {
-    for (var i = 0; i < hcKey.length; i++) {
+    for (let i = 0; i < hcKey.length; i++) {
         if (hcKey[i]["hec-key"] === key) {
             return formatName(hcKey[i]["name"]);
         }
@@ -36,7 +51,7 @@ function getHcName(key, hcKey) {
 }
 
 function loadTable(data, hcKey) {
-    var temp = "";
+    let temp = "";
     data.forEach((itemData) => {
         temp += "<tr>";
         temp += "<td>" + getHcName(itemData["hc-key"], hcKey) + "</td>";
@@ -48,16 +63,24 @@ function loadTable(data, hcKey) {
     document.getElementById('datatable').innerHTML = temp;
 }
 
+function loadTenDaysTable(data) {
+    let temp = "";
+    data.forEach((itemData) => {
+        temp += "<tr>";
+        temp += "<td>" + itemData.ngay + "</td>";
+        temp += "<td>" + itemData.socanhiem + "</td>";
+        temp += "<td>" + itemData.socatuvong + "</td></tr>";
+    });
+    document.getElementById('tenDays').innerHTML = temp;
+}
+
 function LoadChart(data, hcKey) {
-    var listLabels = data.map((item) => getHcName(item["hc-key"], hcKey));
-    var listTotal = data.map((item) => item["value"]);
-    // Skip 18 provinces
-    // for (var i = 0; i < 18; i++) {
-    //     listLabels.shift();
-    //     listTotal.shift();
-    // }
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
+    let listLabels = data.map((item) => getHcName(item["hc-key"], hcKey));
+    let listTotal = data.map((item) => item["value"]);
+    // listLabels = listLabels.slice(start, end);
+    // listTotal = listTotal.slice(start, end);
+    let ctx = document.getElementById('myChart').getContext('2d');
+    let myChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: listLabels,
@@ -94,10 +117,12 @@ function LoadChart(data, hcKey) {
 }
 
 async function Render() {
-    var data = await loadData();
-    var hcKey = await loadHC();
+    let data = await loadData();
+    let hcKey = await loadHC();
+    let tenDays = await loadTenDays();
     loadTable(data, hcKey);
     LoadChart(data, hcKey);
+    loadTenDaysTable(tenDays);
 }
 
 Render();
