@@ -125,14 +125,42 @@ function LoadChart(data, hcKey) {
     });
 }
 
+function LoadLineChart(tenDays) {
+    let ctx = document.getElementById('lineChart').getContext('2d');
+    let labels = tenDays.map((item) => item.ngay).reverse();
+    let infected = tenDays.map((item) => item.socanhiem).reverse();
+    let data = {
+        labels: labels,
+        datasets: [{
+            label: 'Số ca nhiễm mới',
+            data: infected,
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+        }]
+    };
+    let stackedLine = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: {
+            scales: {
+                y: {
+                    stacked: true
+                }
+            }
+        }
+    });
+}
+
 async function Render() {
     let { detail, infected, treated, recovered, deceased } = await loadData();
     let hcKey = await loadHC();
     let tenDays = await loadTenDays();
     loadTable(detail, hcKey);
     loadTotal(infected, treated, recovered, deceased);
-    LoadChart(detail, hcKey);
     loadTenDaysTable(tenDays);
+    LoadLineChart(tenDays);
+    LoadChart(detail, hcKey);
 }
 
 Render();
