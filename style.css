@@ -1,6 +1,5 @@
 .styled-table {
     border-collapse: collapse;
-    margin: 25px 0;
     font-size: 0.9em;
     font-family: sans-serif;
     min-width: 40%;
@@ -45,12 +44,12 @@
 }
 
 .tableSide {
-    width: 45%;
+    width: 50%;
     float: left;
 }
 
-.charSide {
-    width: 50%;
+.cardSide {
+    width: 45%;
     height: 150px;
     float: right;
 }

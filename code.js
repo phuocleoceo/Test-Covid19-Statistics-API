@@ -34,10 +34,8 @@ function getHcName(key, hcKey) {
         }
     }
 }
-async function loadTable() {
-    var data = await loadData();
-    var hcKey = await loadHC();
 
+function loadTable(data, hcKey) {
     var temp = "";
     data.forEach((itemData) => {
         temp += "<tr>";
@@ -50,9 +48,7 @@ async function loadTable() {
     document.getElementById('datatable').innerHTML = temp;
 }
 
-async function LoadChart() {
-    var data = await loadData();
-    var hcKey = await loadHC();
+function LoadChart(data, hcKey) {
     var listLabels = data.map((item) => getHcName(item["hc-key"], hcKey));
     var listTotal = data.map((item) => item["value"]);
     // Skip 18 provinces
@@ -97,6 +93,11 @@ async function LoadChart() {
     });
 }
 
-// Run
-loadTable();
-LoadChart();
+async function Render() {
+    var data = await loadData();
+    var hcKey = await loadHC();
+    loadTable(data, hcKey);
+    LoadChart(data, hcKey);
+}
+
+Render();
