@@ -11,7 +11,7 @@
 
 <body>
     <div class="container">
-        <div class="tableSide">
+        <div class="leftSide">
             <table class="styled-table">
                 <thead>
                     <tr>
@@ -27,7 +27,23 @@
             </table>
         </div>
 
-        <div class="cardSide">
+        <div class="rightSide">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th colspan="4">Tổng cộng</th>
+                    </tr>
+                    <tr>
+                        <th>Số ca khỏi</th>
+                        <th>Số ca đang điều trị</th>
+                        <th>Số ca tử vong</th>
+                        <th>Tổng số ca</th>
+                    </tr>
+                </thead>
+                <tbody id="total">
+                </tbody>
+            </table>
+            <br><br>
             <table class="styled-table">
                 <thead>
                     <tr>
@@ -42,12 +58,13 @@
                 <tbody id="tenDays">
                 </tbody>
             </table>
+            <br>
+            <h1>Kéo xuống để xem biểu đồ !</h1>
         </div>
-
     </div>
 
-    <br/>
-    <hr/><br/>
+    <br>
+    <hr><br>
     <div><canvas id="myChart"></canvas></div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

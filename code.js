@@ -1,8 +1,7 @@
 async function loadData() {
     const response = await fetch('https://api.apify.com/v2/key-value-stores/ZsOpZgeg7dFS1rgfM/records/LATEST');
     const responseJSON = await response.json();
-    const data = responseJSON.detail;
-    return data;
+    return responseJSON;
 }
 
 async function loadHC() {
@@ -74,6 +73,16 @@ function loadTenDaysTable(data) {
     document.getElementById('tenDays').innerHTML = temp;
 }
 
+function loadTotal(infected, treated, recovered, deceased) {
+    let temp = "";
+    temp += "<tr>";
+    temp += "<td>" + recovered + "</td>";
+    temp += "<td>" + treated + "</td>";
+    temp += "<td>" + deceased + "</td>";
+    temp += "<td>" + infected + "</td></tr>";
+    document.getElementById('total').innerHTML = temp;
+}
+
 function LoadChart(data, hcKey) {
     let listLabels = data.map((item) => getHcName(item["hc-key"], hcKey));
     let listTotal = data.map((item) => item["value"]);
@@ -117,11 +126,12 @@ function LoadChart(data, hcKey) {
 }
 
 async function Render() {
-    let data = await loadData();
+    let { detail, infected, treated, recovered, deceased } = await loadData();
     let hcKey = await loadHC();
     let tenDays = await loadTenDays();
-    loadTable(data, hcKey);
-    LoadChart(data, hcKey);
+    loadTable(detail, hcKey);
+    loadTotal(infected, treated, recovered, deceased);
+    LoadChart(detail, hcKey);
     loadTenDaysTable(tenDays);
 }
 
