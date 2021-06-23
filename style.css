@@ -1,4 +1,5 @@
 .styled-table {
+    text-align: center;
     border-collapse: collapse;
     font-size: 0.9em;
     font-family: sans-serif;
@@ -14,6 +15,7 @@
 
 .styled-table th,
 .styled-table td {
+    text-align: center;
     padding: 12px 15px;
 }
 
