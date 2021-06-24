@@ -154,6 +154,33 @@ function loadTenDaysInfectedChart(tenDays) {
     });
 }
 
+function loadTenDaysRecoveredChart(tenDays) {
+    let ctx = document.getElementById('tenDaysRecoveredChart').getContext('2d');
+    let labels = tenDays.map((item) => item.ngay).reverse();
+    let infected = tenDays.map((item) => item.socakhoi).reverse();
+    let data = {
+        labels: labels,
+        datasets: [{
+            label: 'Số ca khỏi mới',
+            data: infected,
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+        }]
+    };
+    let stackedLine = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: {
+            scales: {
+                y: {
+                    stacked: true
+                }
+            }
+        }
+    });
+}
+
 function loadTenDaysDeceasedChart(tenDays) {
     let ctx = document.getElementById('tenDaysDeceasedChart').getContext('2d');
     let labels = tenDays.map((item) => item.ngay).reverse();
@@ -189,6 +216,7 @@ async function Render() {
     loadTotalTable(infected, treated, recovered, deceased);
     loadTenDaysTable(tenDays);
     loadTenDaysInfectedChart(tenDays);
+    loadTenDaysRecoveredChart(tenDays);
     loadTenDaysDeceasedChart(tenDays);
     loadProvinceChart(detail, hcKey);
 }
