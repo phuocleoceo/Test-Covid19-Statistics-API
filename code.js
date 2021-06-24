@@ -125,14 +125,41 @@ function loadProvinceChart(data, hcKey) {
     });
 }
 
-function loadTenDaysChart(tenDays) {
-    let ctx = document.getElementById('lineChart').getContext('2d');
+function loadTenDaysInfectedChart(tenDays) {
+    let ctx = document.getElementById('tenDaysInfectedChart').getContext('2d');
     let labels = tenDays.map((item) => item.ngay).reverse();
     let infected = tenDays.map((item) => item.socanhiem).reverse();
     let data = {
         labels: labels,
         datasets: [{
             label: 'Số ca nhiễm mới',
+            data: infected,
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+        }]
+    };
+    let stackedLine = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: {
+            scales: {
+                y: {
+                    stacked: true
+                }
+            }
+        }
+    });
+}
+
+function loadTenDaysDeceasedChart(tenDays) {
+    let ctx = document.getElementById('tenDaysDeceasedChart').getContext('2d');
+    let labels = tenDays.map((item) => item.ngay).reverse();
+    let infected = tenDays.map((item) => item.socatuvong).reverse();
+    let data = {
+        labels: labels,
+        datasets: [{
+            label: 'Số ca tử vong mới',
             data: infected,
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
@@ -159,7 +186,8 @@ async function Render() {
     loadProvinceTable(detail, hcKey);
     loadTotalTable(infected, treated, recovered, deceased);
     loadTenDaysTable(tenDays);
-    loadTenDaysChart(tenDays);
+    loadTenDaysInfectedChart(tenDays);
+    loadTenDaysDeceasedChart(tenDays);
     loadProvinceChart(detail, hcKey);
 }
 
