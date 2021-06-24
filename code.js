@@ -137,7 +137,7 @@ function loadTenDaysInfectedChart(tenDays) {
             label: 'Số ca nhiễm mới',
             data: infected,
             fill: false,
-            borderColor: 'rgb(75, 192, 192)',
+            borderColor: 'rgb(255, 0, 0)',
             tension: 0.1
         }]
     };
@@ -164,7 +164,7 @@ function loadTenDaysRecoveredChart(tenDays) {
             label: 'Số ca khỏi mới',
             data: infected,
             fill: false,
-            borderColor: 'rgb(75, 192, 192)',
+            borderColor: 'rgb(0, 204, 0)',
             tension: 0.1
         }]
     };
@@ -191,7 +191,7 @@ function loadTenDaysDeceasedChart(tenDays) {
             label: 'Số ca tử vong mới',
             data: infected,
             fill: false,
-            borderColor: 'rgb(75, 192, 192)',
+            borderColor: 'rgb(102, 153, 153)',
             tension: 0.1
         }]
     };
