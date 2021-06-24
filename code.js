@@ -29,7 +29,7 @@ async function loadTenDays() {
 
 //Make first letter or a word Uppercase
 function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    return string.charAt(0).toUpperCase() + string.slice(1); //slice 1 to string.length
 }
 
 // aaa-bbb => Aaa Bbb
@@ -140,7 +140,7 @@ function loadPercentTotalCase(infected, treated, recovered, deceased) {
             'Ca tử vong'
         ],
         datasets: [{
-            label: 'Tỉ lệ số ca',
+            label: 'Tỉ lệ phần trăm số ca',
             data: percent,
             backgroundColor: [
                 'rgb(255, 99, 132)',
@@ -153,7 +153,15 @@ function loadPercentTotalCase(infected, treated, recovered, deceased) {
     let pieChart = new Chart(ctx, {
         type: 'doughnut',
         data: data,
-        options: { responsive: false, }
+        options: {
+            responsive: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Tỉ lệ phần trăm số ca',
+                }
+            }
+        }
     });
 }
 
