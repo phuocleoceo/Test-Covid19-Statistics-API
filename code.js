@@ -127,6 +127,36 @@ function loadProvinceChart(data, hcKey) {
     });
 }
 
+function loadPercentTotalCase(infected, treated, recovered, deceased) {
+    let ctx = document.getElementById('percentTotalCase').getContext('2d');
+    let percent = [];
+    percent.push(treated / infected * 100);
+    percent.push(recovered / infected * 100);
+    percent.push(deceased / infected * 100);
+    let data = {
+        labels: [
+            'Ca nhiễm',
+            'Ca khỏi',
+            'Ca tử vong'
+        ],
+        datasets: [{
+            label: 'Tỉ lệ số ca',
+            data: percent,
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 205, 86)'
+            ],
+            hoverOffset: 4
+        }]
+    };
+    let pieChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: data,
+        options: { responsive: false, }
+    });
+}
+
 function loadTenDaysInfectedChart(tenDays) {
     let ctx = document.getElementById('tenDaysInfectedChart').getContext('2d');
     let labels = tenDays.map((item) => item.ngay).reverse();
@@ -214,6 +244,7 @@ async function Render() {
     let tenDays = await loadTenDays();
     loadProvinceTable(detail, hcKey);
     loadTotalTable(infected, treated, recovered, deceased);
+    loadPercentTotalCase(infected, treated, recovered, deceased);
     loadTenDaysTable(tenDays);
     loadTenDaysInfectedChart(tenDays);
     loadTenDaysRecoveredChart(tenDays);

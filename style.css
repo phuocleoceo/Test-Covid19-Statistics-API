@@ -56,6 +56,8 @@
     float: right;
 }
 
-h1 {
-    margin-left: 5%;
+#percentTotalCase {
+    width: 60%;
+    height: 60%;
+    margin-left: 12%;
 }
