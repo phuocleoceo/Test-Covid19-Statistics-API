@@ -14,12 +14,13 @@ async function loadHcKey() {
 async function loadTenDays() {
     const response = await fetch('https://api.apify.com/v2/key-value-stores/Tksmptn5O41eHrT4d/records/LATEST');
     const responseJSON = await response.json();
-    const { canhiem, catuvong } = responseJSON;
+    const { canhiem, cakhoi, catuvong } = responseJSON;
     let tenDays = [];
     for (let i = 0; i < canhiem.length; i++) {
         tenDays.unshift({
             ngay: canhiem[i].day,
             socanhiem: canhiem[i].quantity,
+            socakhoi: cakhoi[i].quantity,
             socatuvong: catuvong[i].quantity
         });
     }
@@ -68,6 +69,7 @@ function loadTenDaysTable(data) {
         temp += "<tr>";
         temp += "<td>" + itemData.ngay + "</td>";
         temp += "<td>" + itemData.socanhiem + "</td>";
+        temp += "<td>" + itemData.socakhoi + "</td>";
         temp += "<td>" + itemData.socatuvong + "</td></tr>";
     });
     document.getElementById('tenDays').innerHTML = temp;
