@@ -1,10 +1,10 @@
-async function loadData() {
+async function loadPerProvince() {
     const response = await fetch('https://api.apify.com/v2/key-value-stores/ZsOpZgeg7dFS1rgfM/records/LATEST');
     const responseJSON = await response.json();
     return responseJSON;
 }
 
-async function loadHC() {
+async function loadHcKey() {
     const response = await fetch('https://api.apify.com/v2/key-value-stores/p3nS2Q9TUn6kUOriJ/records/LATEST');
     const responseJSON = await response.json();
     const data = responseJSON.key;
@@ -49,7 +49,7 @@ function getHcName(key, hcKey) {
     }
 }
 
-function loadTable(data, hcKey) {
+function loadProvinceTable(data, hcKey) {
     let temp = "";
     data.forEach((itemData) => {
         temp += "<tr>";
@@ -73,7 +73,7 @@ function loadTenDaysTable(data) {
     document.getElementById('tenDays').innerHTML = temp;
 }
 
-function loadTotal(infected, treated, recovered, deceased) {
+function loadTotalTable(infected, treated, recovered, deceased) {
     let temp = "";
     temp += "<tr>";
     temp += "<td>" + recovered + "</td>";
@@ -83,7 +83,7 @@ function loadTotal(infected, treated, recovered, deceased) {
     document.getElementById('total').innerHTML = temp;
 }
 
-function LoadChart(data, hcKey) {
+function loadProvinceChart(data, hcKey) {
     let listLabels = data.map((item) => getHcName(item["hc-key"], hcKey));
     let listTotal = data.map((item) => item["value"]);
     // listLabels = listLabels.slice(start, end);
@@ -125,7 +125,7 @@ function LoadChart(data, hcKey) {
     });
 }
 
-function LoadLineChart(tenDays) {
+function loadTenDaysChart(tenDays) {
     let ctx = document.getElementById('lineChart').getContext('2d');
     let labels = tenDays.map((item) => item.ngay).reverse();
     let infected = tenDays.map((item) => item.socanhiem).reverse();
@@ -153,14 +153,14 @@ function LoadLineChart(tenDays) {
 }
 
 async function Render() {
-    let { detail, infected, treated, recovered, deceased } = await loadData();
-    let hcKey = await loadHC();
+    let { detail, infected, treated, recovered, deceased } = await loadPerProvince();
+    let hcKey = await loadHcKey();
     let tenDays = await loadTenDays();
-    loadTable(detail, hcKey);
-    loadTotal(infected, treated, recovered, deceased);
+    loadProvinceTable(detail, hcKey);
+    loadTotalTable(infected, treated, recovered, deceased);
     loadTenDaysTable(tenDays);
-    LoadLineChart(tenDays);
-    LoadChart(detail, hcKey);
+    loadTenDaysChart(tenDays);
+    loadProvinceChart(detail, hcKey);
 }
 
 Render();
