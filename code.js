@@ -1,18 +1,14 @@
+const province_api = 'https://api.apify.com/v2/key-value-stores/ZsOpZgeg7dFS1rgfM/records/LATEST';
+const tenDays_api = 'https://api.apify.com/v2/key-value-stores/Tksmptn5O41eHrT4d/records/LATEST';
+
 async function loadPerProvince() {
-    const response = await fetch('https://api.apify.com/v2/key-value-stores/ZsOpZgeg7dFS1rgfM/records/LATEST');
+    const response = await fetch(province_api);
     const responseJSON = await response.json();
     return responseJSON;
 }
 
-async function loadHcKey() {
-    const response = await fetch('https://api.apify.com/v2/key-value-stores/p3nS2Q9TUn6kUOriJ/records/LATEST');
-    const responseJSON = await response.json();
-    const data = responseJSON.key;
-    return data;
-}
-
 async function loadTenDays() {
-    const response = await fetch('https://api.apify.com/v2/key-value-stores/Tksmptn5O41eHrT4d/records/LATEST');
+    const response = await fetch(tenDays_api);
     const responseJSON = await response.json();
     const { canhiem, cakhoi, catuvong } = responseJSON;
     let tenDays = [];
@@ -27,50 +23,28 @@ async function loadTenDays() {
     return tenDays;
 }
 
-//Make first letter or a word Uppercase
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1); //slice 1 to string.length
-}
 
-// aaa-bbb => Aaa Bbb
-function formatName(name) {
-    let a = name.split("-");
-    let result = "";
-    for (let i = 0; i < a.length; i++) {
-        result += capitalizeFirstLetter(a[i]) + " ";
-    }
-    return result;
-}
-// Get name by hc-key
-function getHcName(key, hcKey) {
-    for (let i = 0; i < hcKey.length; i++) {
-        if (hcKey[i]["hec-key"] === key) {
-            return formatName(hcKey[i]["name"]);
-        }
-    }
-}
-
-function loadProvinceTable(data, hcKey) {
+function loadProvinceTable(data) {
     let temp = "";
-    data.forEach((itemData) => {
+    data.forEach((item) => {
         temp += "<tr>";
-        temp += "<td>" + getHcName(itemData["hc-key"], hcKey) + "</td>";
-        temp += "<td>" + itemData.socakhoi + "</td>";
-        temp += "<td>" + itemData.socadangdieutri + "</td>";
-        temp += "<td>" + itemData.socatuvong + "</td>";
-        temp += "<td>" + itemData.value + "</td></tr>";
+        temp += "<td>" + item.name + "</td>";
+        temp += "<td>" + item.recovered + "</td>";
+        temp += "<td>" + item.treating + "</td>";
+        temp += "<td>" + item.death + "</td>";
+        temp += "<td>" + item.casesToday + "</td></tr>";
     });
     document.getElementById('datatable').innerHTML = temp;
 }
 
 function loadTenDaysTable(data) {
     let temp = "";
-    data.forEach((itemData) => {
+    data.forEach((item) => {
         temp += "<tr>";
-        temp += "<td>" + itemData.ngay + "</td>";
-        temp += "<td>" + itemData.socanhiem + "</td>";
-        temp += "<td>" + itemData.socakhoi + "</td>";
-        temp += "<td>" + itemData.socatuvong + "</td></tr>";
+        temp += "<td>" + item.ngay + "</td>";
+        temp += "<td>" + item.socanhiem + "</td>";
+        temp += "<td>" + item.socakhoi + "</td>";
+        temp += "<td>" + item.socatuvong + "</td></tr>";
     });
     document.getElementById('tenDays').innerHTML = temp;
 }
@@ -85,9 +59,9 @@ function loadTotalTable(infected, treated, recovered, deceased) {
     document.getElementById('total').innerHTML = temp;
 }
 
-function loadProvinceChart(data, hcKey) {
-    let listLabels = data.map((item) => getHcName(item["hc-key"], hcKey));
-    let listTotal = data.map((item) => item["value"]);
+function loadProvinceChart(data) {
+    let listLabels = data.map((item) => item.name);
+    let listTotal = data.map((item) => item.casesToday);
     // listLabels = listLabels.slice(start, end);
     // listTotal = listTotal.slice(start, end);
     let ctx = document.getElementById('myChart').getContext('2d');
@@ -96,7 +70,7 @@ function loadProvinceChart(data, hcKey) {
         data: {
             labels: listLabels,
             datasets: [{
-                label: 'Tổng số ca',
+                label: 'Số ca hôm nay',
                 data: listTotal,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
@@ -248,16 +222,15 @@ function loadTenDaysDeceasedChart(tenDays) {
 
 async function Render() {
     let { detail, infected, treated, recovered, deceased } = await loadPerProvince();
-    let hcKey = await loadHcKey();
     let tenDays = await loadTenDays();
-    loadProvinceTable(detail, hcKey);
+    loadProvinceTable(detail);
     loadTotalTable(infected, treated, recovered, deceased);
     loadPercentTotalCase(infected, treated, recovered, deceased);
     loadTenDaysTable(tenDays);
     loadTenDaysInfectedChart(tenDays);
     loadTenDaysRecoveredChart(tenDays);
     loadTenDaysDeceasedChart(tenDays);
-    loadProvinceChart(detail, hcKey);
+    loadProvinceChart(detail);
 }
 
 Render();
